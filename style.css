@@ -2550,3 +2550,49 @@ body a {
     margin-bottom: 20px;
   }
 }
+
+/* Buscador */
+
+input.buscadorInput {
+  border: none;
+  background: transparent;
+  /* height: 5px; */
+  width: 90px;
+}
+
+.resultadosBusqueda {
+  position: absolute;
+  top: 90px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 320px;
+  height: 420px;
+  background-color: #F2F2F2;
+  border-radius: 20px;
+  border: 1px solid #CFCFCF;
+  display: none;
+  overflow-y: scroll;
+}
+
+.resultadosBusqueda .appScreen {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  height: auto;
+  padding: 20px;
+}
+
+.resultadosBusqueda .app {
+  width: 70px;
+  height: 70px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #333;
+  text-align: center;
+}

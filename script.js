@@ -57,10 +57,11 @@ $(function(){
         dinamico: false
       },
       {
-        nombre: 'Facebook',
-        icono: 'https://firebasestorage.googleapis.com/v0/b/fotos-3cba1.appspot.com/o/ios14%2Ffacebook.png?alt=media&token=f383d17e-32a7-49ef-8ebb-c723d556baa2',
+        nombre: 'Linkedin',
+        icono: 'https://play-lh.googleusercontent.com/kMofEFLjobZy_bCuaiDogzBcUT-dz3BBbOrIEjJ-hqOabjK8ieuevGe6wlTD15QzOqw=s64-rw',
         type: 'app',
         notificaciones: 5,
+        url: 'https://www.linkedin.com/in/jdanielcastro/',
         dinamico: false
       },
       {
@@ -106,6 +107,7 @@ $(function(){
         icono: 'https://firebasestorage.googleapis.com/v0/b/fotos-3cba1.appspot.com/o/ios14%2Fwhatsapp.png?alt=media&token=b3416a44-56fc-4991-a10b-e4a34944bf3c',
         type: 'app',
         notificaciones: 22,
+        url: 'https://api.whatsapp.com/send?phone=573016834994&text=Hola,%20vi%20tú%20pagina%20en%20https://tecco.com.co/',
         dinamico: false
       },
       {
@@ -116,7 +118,8 @@ $(function(){
       },
       {
         nombre: 'Twitter',
-        icono: 'https://firebasestorage.googleapis.com/v0/b/fotos-3cba1.appspot.com/o/ios14%2Ftwitter.png?alt=media&token=4360a8ea-afce-4f20-9057-bb2d4d5a9e41',
+        // icono: 'https://firebasestorage.googleapis.com/v0/b/fotos-3cba1.appspot.com/o/ios14%2Ftwitter.png?alt=media&token=4360a8ea-afce-4f20-9057-bb2d4d5a9e41',
+        icono: 'https://logowik.com/content/uploads/images/twitter-x-icon3832.logowik.com.webp',
         type: 'app',
         notificaciones: 2,
         dinamico: false
@@ -153,8 +156,9 @@ $(function(){
         dinamico: false
       },
       {
-        nombre: 'Liverpool',
-        icono: 'https://firebasestorage.googleapis.com/v0/b/fotos-3cba1.appspot.com/o/ios14%2Fliverpool.png?alt=media&token=42dfbbba-2149-4fe0-b503-419513082039',
+        nombre: 'Davivienda',
+        // icono: 'https://firebasestorage.googleapis.com/v0/b/fotos-3cba1.appspot.com/o/ios14%2Fliverpool.png?alt=media&token=42dfbbba-2149-4fe0-b503-419513082039',
+        icono: 'https://play-lh.googleusercontent.com/Q9L3SKs70QGK2O7eicNehbneYeXWk2VEFxLOVQPPei4hyRe3RZDwBZeXr7DYKZuagDOL=w240-h480-rw',
         type: 'app',
         dinamico: false
       },
@@ -393,10 +397,12 @@ $(function(){
   function sanearString(string){
     return string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
-  function pintarApps(apps, container, containerDots){
+ 
+  function pintarApps(apps, container, containerDots) {
     container.empty();
     containerDots.empty();
     globalState.wrapperApps.grupos = Math.ceil(apps.length / globalState.wrapperApps.appsGrupo);
+    
     let appCount = 1;
     let html = '';
     apps.map((app, idArr) => {
@@ -404,18 +410,33 @@ $(function(){
       let clases = 'app';
       if (app.type == 'widgetFull') clases = clases + ' widgetFull';
       if (app.dinamico && app.type == 'app') clases = `${clases} ${sanearString(app.nombre).toLowerCase()}Dinamico`;
+  
+      // Verificar si la propiedad "url" existe antes de agregar el enlace
+      if (app.url) {
+        // Asegurar que la URL sea absoluta si es relativa
+        const url = app.url.startsWith("http") ? app.url : window.location.origin + app.url;
+        html += `<a href="${url}" target="_blank">`;
+      }
+  
       html += `<div class="${clases}" data-app="${app.type + sanearString(app.nombre)}" data-id="${idArr}">
-${app.notificaciones ? `<div class="notificacion">${app.notificaciones}</div>` : ''}
-<div class="icono" style="${!app.dinamico ? `background-image:url(${app.icono});` : 'background-color:#fff;'}"></div>
-<p class="nombre">${app.nombre}</p>
-</div>`;
+      ${app.notificaciones ? `<div class="notificacion">${app.notificaciones}</div>` : ''}
+      <div class="icono" style="${!app.dinamico ? `background-image:url(${app.icono});` : 'background-color:#fff;'}"></div>
+      <p class="nombre">${app.nombre}</p>
+      </div>`;
+  
+      // Cerrar el enlace si se abrió previamente
+      if (app.url) {
+        html += '</a>';
+      }
+  
       if (appCount == globalState.wrapperApps.appsGrupo) {
         html += '</div>';
         appCount = 1;
         return false;
       }
       app.type == 'widgetFull' ? appCount = appCount + 8 : appCount++;
-    })
+    });
+  
     if (globalState.wrapperApps.grupos > 1) {
       for (let index = 0; index < globalState.wrapperApps.grupos; index++) {
         containerDots.append(`<div class="dot ${index == 0 ? 'activo':''}"></div>`);
@@ -423,6 +444,10 @@ ${app.notificaciones ? `<div class="notificacion">${app.notificaciones}</div>` :
     }
     container.append(html);
   }
+  
+  
+
+  //muestra una alerta estilo iOS en la pantalla
   function alertaiOS(config) {
     if ($('#iOSAlert').length || $('.mainScreen').hasClass('bloqueado')) return false;
     config = jQuery.extend({
@@ -490,6 +515,8 @@ ${app.notificaciones ? `<div class="notificacion">${app.notificaciones}</div>` :
       $('#iOSAlert').fadeOut('fast', function () { $(this).remove() });
     })
   }
+  
+  //interfaz de cámara
   function camara(){
     if (!$('.camaraApp').length) {
       $('.mainScreen').append(`
@@ -552,6 +579,8 @@ ${app.notificaciones ? `<div class="notificacion">${app.notificaciones}</div>` :
       $('.camaraApp').removeClass('hidden');
     }, 100)
   }
+
+  //e encarga de pintar y preparar la interfaz de usuario (UI) de la aplicación
   function renderizarUI(){
     //Pintamos todas las apps en el contenedor principal
     pintarApps(globalState.apps, $('.wrapperApps'), $('.wrapperDots'));
@@ -573,6 +602,8 @@ ${app.notificaciones ? `<div class="notificacion">${app.notificaciones}</div>` :
       $('.wrapperApps .app.relojDinamico .icono').reloj();
     }
   }
+
+  //es responsable de encender la pantalla del dispositivo simulado.
   function encendido(){
     renderizarUI();
     setTimeout(() => {
@@ -595,7 +626,7 @@ ${app.notificaciones ? `<div class="notificacion">${app.notificaciones}</div>` :
   //Eventos del dia en la pantalla de widgetsCenter
   $('.widgetCenter .block.eventos').fechaIcono({diaCompleto: true});
 
-  //Touch actions
+  //Touch actions se establece una acción táctil en la pantalla de bloqueo (.lockScreen) que detecta un movimiento vertical (mov: 'y') hacia arriba (movUp). Cuando se detecta este movimiento, se realizan varias acciones, incluyendo la adición y eliminación de clases para mostrar y ocultar elementos de la interfaz de usuario, y la simulación de una advertencia de batería baja utilizando setTimeout.
   $('.lockScreen').touchMov({
     mov: 'y',
     movUp: function(e){
@@ -699,6 +730,7 @@ ${app.notificaciones ? `<div class="notificacion">${app.notificaciones}</div>` :
       }, 200)
     }
   });
+
   $('.widgetScreen .wrapper').touchMov({
     mov: 'y',
     movDown: function(e) {
@@ -733,6 +765,7 @@ ${app.notificaciones ? `<div class="notificacion">${app.notificaciones}</div>` :
   });
 
   //Menu flotante al presionar app por 1 segundo
+  //manipular elementos del DOM y añadir eventos de interacción. En particular, se está utilizando el plugin touchMov para detectar y manejar el movimiento de un elemento en la pantalla mediante eventos táctiles. Además, se está añadiendo un evento de ratón (mousedown) a los elementos con clase .appScreen para detectar cuando el usuario mantiene presionado un elemento durante un segundo, y se están realizando diferentes acciones en función de dónde se haya hecho clic
   $('.mainScreen .appScreen').mousedown(function(e){
     if ($(this).parent().hasClass('shakingApps')) return false;
     let timeout = setTimeout(() => {
@@ -797,6 +830,7 @@ ${app.notificaciones ? `<div class="notificacion">${app.notificaciones}</div>` :
       clearTimeout(timeout);
     })
   })
+
   //Shaking apps desde el menu flotante de la app
   $('body').on('click', '.fixedMenuFixedApp .menuOption.shaking', function(){
     $(this).parent().remove();
@@ -910,4 +944,38 @@ ${app.notificaciones ? `<div class="notificacion">${app.notificaciones}</div>` :
     $(this).toggleClass('activo');
     $('.mainScreen').toggleClass('bloqueado');
   })
+
+  //Buscador
+
+  // Obtener los elementos relevantes del DOM
+  const buscadorInput = document.querySelector('.buscadorInput');
+  const resultadosBusqueda = document.querySelector('.resultadosBusqueda');
+  const iconos = document.querySelectorAll('.icono');
+
+  // Agregar un evento de escucha al elemento de entrada de búsqueda
+  buscadorInput.addEventListener('input', () => {
+    // Limpiar los resultados de búsqueda previos
+    resultadosBusqueda.innerHTML = '';
+
+    // Obtener el texto de búsqueda
+    const busqueda = buscadorInput.value.toLowerCase();
+
+    // Iterar a través de los iconos para verificar si alguno de ellos coincide con el texto de búsqueda
+    iconos.forEach(icono => {
+      const nombreIcono = icono.querySelector('img').getAttribute('alt').toLowerCase();
+      if (nombreIcono.includes(busqueda)) {
+        resultadosBusqueda.appendChild(icono.cloneNode(true));
+      }
+    });
+
+    // Mostrar un mensaje si no se encontraron resultados de búsqueda
+    if (resultadosBusqueda.innerHTML === '') {
+      resultadosBusqueda.innerHTML = 'No se encontraron resultados de búsqueda';
+    }
+  });
+
+
+
+
+
 })
