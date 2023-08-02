@@ -122,6 +122,7 @@ $(function(){
         icono: 'https://logowik.com/content/uploads/images/twitter-x-icon3832.logowik.com.webp',
         type: 'app',
         notificaciones: 2,
+        url: 'https://twitter.com/jdanielcastror',
         dinamico: false
       },
       {
@@ -141,6 +142,7 @@ $(function(){
         nombre: 'Spotify',
         icono: 'https://firebasestorage.googleapis.com/v0/b/fotos-3cba1.appspot.com/o/ios14%2Fspotify.png?alt=media&token=f538e504-a8d7-4707-a308-8d4bc2b6f7f6',
         type: 'app',
+        url: 'https://open.spotify.com/playlist/2QslW1lNV4VFc3BJZpRkhf?si=c72731b5ce27451c',
         dinamico: false
       },
       {
